@@ -20,14 +20,18 @@ namespace MiPrimerWebApiM3.Controllers
             this.context = context;
         }
 
-        [HttpGet]
+        //Multiple endpoint
+        [HttpGet("/listado")] // ignora [Route("api/[controller]")]
+        [HttpGet("listado")]
         public ActionResult<IEnumerable<Autor>> Get()
         {
             return context.Autores.ToList();
         }
-        
-        [HttpGet("{id}", Name = "ObtenerAutor")]
-        public ActionResult<Autor> Get(int id)
+
+        // GET api/autores/5 o api/autores/5/david
+        [HttpGet("{id}/{param2?}", Name = "ObtenerAutor")] // param2 es opcional
+        [HttpGet("{id}/{param2=David}", Name = "ObtenerAutor")] // param2 con parametro por defecto
+        public ActionResult<Autor> Get(int id, string param2)
         {
             var autor = context.Autores.FirstOrDefault(x => x.Id == id);
 
