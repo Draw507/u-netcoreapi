@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using MiPrimerWebApiM3.Context;
 using MiPrimerWebApiM3.Entities;
+using MiPrimerWebApiM3.Helpers;
 using MiPrimerWebApiM3.Services;
 using System;
 using System.Collections.Generic;
@@ -30,15 +31,20 @@ namespace MiPrimerWebApiM3.Controllers
         //Multiple endpoint
         [HttpGet("/listado")] // ignora [Route("api/[controller]")]
         [HttpGet("listado")]
+        [HttpGet]
+        [ServiceFilter(typeof(MiFiltroDeAccion))] // Esto es por la inyeccion de dependencias en el filtro de accion
         public ActionResult<IEnumerable<Autor>> Get()
         {
+            //throw new NotImplementedException();
+
             logger.LogInformation("Obteniendo los autores");
+
             return context.Autores.ToList();
         }
 
         // GET api/autores/5 o api/autores/5/david
         [HttpGet("{id}/{param2?}", Name = "ObtenerAutor")] // param2 es opcional
-        [HttpGet("{id}/{param2=David}", Name = "ObtenerAutor")] // param2 con parametro por defecto
+        //[HttpGet("{id}/{param2=David}", Name = "ObtenerAutor")] // param2 con parametro por defecto
         public ActionResult<Autor> Get(int id, string param2)
         {
             var autor = context.Autores.FirstOrDefault(x => x.Id == id);

@@ -13,6 +13,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using MiPrimerWebApiM3.Context;
+using MiPrimerWebApiM3.Helpers;
 using MiPrimerWebApiM3.Services;
 
 namespace MiPrimerWebApiM3
@@ -32,6 +33,8 @@ namespace MiPrimerWebApiM3
             services.AddResponseCaching();
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer();
 
+            services.AddScoped<MiFiltroDeAccion>();
+
             //Donde se utilice la interfaz, sería provista la clase ClaseB
             services.AddTransient<IClaseB, ClaseB>();
 
@@ -39,6 +42,11 @@ namespace MiPrimerWebApiM3
 
             //Ignorar referencias ciclicas
             services.AddControllers().AddNewtonsoftJson(options => options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
+
+            services.AddMvc(options => {
+                options.Filters.Add(new MiFiltroDeExcepcion());
+                //options.Filters.Add(typeof(MiFiltroDeExcepcion)); //Si hubiese inyeccion de dependencias en el filtro
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -58,6 +66,8 @@ namespace MiPrimerWebApiM3
             app.UseResponseCaching();
 
             app.UseAuthentication();
+
+            //app.UseMvc();
 
             app.UseEndpoints(endpoints =>
             {
