@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MiPrimerWebApiM3.Helpers;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -10,6 +11,7 @@ namespace MiPrimerWebApiM3.Entities
     {
         public int Id { get; set; }
         [Required]
+        [PrimeraLetraMayuscula]
         public string Nombre { get; set; }
         public List<Libro> Libros { get; set; }
     }
