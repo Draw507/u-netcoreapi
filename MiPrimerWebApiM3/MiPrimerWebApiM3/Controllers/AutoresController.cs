@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using MiPrimerWebApiM3.Context;
@@ -89,6 +90,14 @@ namespace MiPrimerWebApiM3.Controllers
             context.SaveChanges();
 
             return autor;
+        }
+
+        [HttpGet("Caching")]
+        [Authorize]
+        [ResponseCache(Duration = 15)]
+        public ActionResult<string> Caching()
+        {
+            return DateTime.Now.Second.ToString();
         }
     }
 }
