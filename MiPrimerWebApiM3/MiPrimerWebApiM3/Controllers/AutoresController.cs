@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using MiPrimerWebApiM3.Context;
 using MiPrimerWebApiM3.Entities;
 using MiPrimerWebApiM3.Services;
@@ -16,11 +17,13 @@ namespace MiPrimerWebApiM3.Controllers
     {
         private readonly ApplicationDbContext context;
         private readonly IClaseB claseB;
+        private readonly ILogger<AutoresController> logger;
 
-        public AutoresController(ApplicationDbContext context, IClaseB claseB)
+        public AutoresController(ApplicationDbContext context, IClaseB claseB, ILogger<AutoresController> logger)
         {
             this.context = context;
             this.claseB = claseB;
+            this.logger = logger;
         }
 
         //Multiple endpoint
@@ -28,6 +31,7 @@ namespace MiPrimerWebApiM3.Controllers
         [HttpGet("listado")]
         public ActionResult<IEnumerable<Autor>> Get()
         {
+            logger.LogInformation("Obteniendo los autores");
             return context.Autores.ToList();
         }
 
