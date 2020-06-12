@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using MiPrimerWebApiM3.Context;
 using MiPrimerWebApiM3.Entities;
+using MiPrimerWebApiM3.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,10 +15,12 @@ namespace MiPrimerWebApiM3.Controllers
     public class AutoresController: ControllerBase
     {
         private readonly ApplicationDbContext context;
+        private readonly IClaseB claseB;
 
-        public AutoresController(ApplicationDbContext context)
+        public AutoresController(ApplicationDbContext context, IClaseB claseB)
         {
             this.context = context;
+            this.claseB = claseB;
         }
 
         //Multiple endpoint

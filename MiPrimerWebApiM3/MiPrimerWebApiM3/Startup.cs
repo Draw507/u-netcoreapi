@@ -12,6 +12,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using MiPrimerWebApiM3.Context;
+using MiPrimerWebApiM3.Services;
 
 namespace MiPrimerWebApiM3
 {
@@ -27,6 +28,9 @@ namespace MiPrimerWebApiM3
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            //Donde se utilice la interfaz, sería provista la clase ClaseB
+            services.AddTransient<IClaseB, ClaseB>();
+
             services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
             //Ignorar referencias ciclicas
