@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using AutoMapper.Configuration;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
@@ -24,13 +25,15 @@ namespace MiPrimerWebApiM3.Controllers
         private readonly IClaseB claseB;
         private readonly ILogger<AutoresController> logger;
         private readonly IMapper mapper;
+        private readonly Microsoft.Extensions.Configuration.IConfiguration configuration;
 
-        public AutoresController(ApplicationDbContext context, IClaseB claseB, ILogger<AutoresController> logger, IMapper mapper)
+        public AutoresController(ApplicationDbContext context, IClaseB claseB, ILogger<AutoresController> logger, IMapper mapper, Microsoft.Extensions.Configuration.IConfiguration configuration)
         {
             this.context = context;
             this.claseB = claseB;
             this.logger = logger;
             this.mapper = mapper;
+            this.configuration = configuration;
         }
 
         //Multiple endpoint
@@ -62,6 +65,13 @@ namespace MiPrimerWebApiM3.Controllers
             var autorDTO = mapper.Map<AutorDTO>(autor);
 
             return autorDTO;
+        }
+
+        [HttpGet("Configuracion")]
+        public ActionResult<string> Configuracion()
+        {
+            //return configuration["apellido"];
+            return configuration["connectionStrings:DefaultConnection"]; //Busqueda interna
         }
 
         [HttpPost]
