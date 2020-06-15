@@ -124,19 +124,19 @@ namespace MiPrimerWebApiM3.Controllers
         }
 
         [HttpDelete("{id}")]
-        public ActionResult<Autor> Delete(int id)
+        public async Task<ActionResult<Autor>> Delete(int id)
         {
-            var autor = context.Autores.FirstOrDefault(x => x.Id == id);
+            var autorId = await context.Autores.Select(x => x.Id).FirstOrDefaultAsync(x => x == id);
 
-            if(autor == null)
+            if(autorId == default(int))
             {
                 return NotFound();
             }
 
-            context.Autores.Remove(autor);
-            context.SaveChanges();
+            context.Autores.Remove(new Autor { Id = autorId });
+            await context.SaveChangesAsync();
 
-            return autor;
+            return NoContent();
         }
 
         [HttpGet("Caching")]
