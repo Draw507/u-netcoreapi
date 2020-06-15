@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -88,6 +89,40 @@ namespace MiPrimerWebApiM3.Controllers
             return NoContent();
         }
 
+        //JSON Patch RFC 6902
+        [HttpPatch("{id}")]
+        public async Task<ActionResult> Patch(int id, [FromBody] JsonPatchDocument<AutorCreacionDTO> patchDocument)
+        {
+            if(patchDocument == null)
+            {
+                return BadRequest();
+            }
+
+            var autorDeLaDB = await context.Autores.FirstOrDefaultAsync(x => x.Id == id);
+
+            if(autorDeLaDB == null)
+            {
+                return NotFound();
+            }
+
+            var autorDTO = mapper.Map<AutorCreacionDTO>(autorDeLaDB);
+
+            patchDocument.ApplyTo(autorDTO, ModelState);
+
+            mapper.Map(autorDTO, autorDeLaDB);
+
+            var isValid = TryValidateModel(autorDeLaDB);
+
+            if (!isValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            await context.SaveChangesAsync();
+
+            return NoContent();
+        }
+
         [HttpDelete("{id}")]
         public ActionResult<Autor> Delete(int id)
         {
@@ -111,5 +146,6 @@ namespace MiPrimerWebApiM3.Controllers
         {
             return DateTime.Now.Second.ToString();
         }
+
     }
 }
