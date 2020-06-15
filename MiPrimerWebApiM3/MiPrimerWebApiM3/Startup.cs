@@ -36,6 +36,7 @@ namespace MiPrimerWebApiM3
             services.AddAutoMapper(configuration => 
             {
                 configuration.CreateMap<Autor, AutorDTO>();
+                configuration.CreateMap<AutorCreacionDTO, Autor>();
             },
             typeof(Startup));
 

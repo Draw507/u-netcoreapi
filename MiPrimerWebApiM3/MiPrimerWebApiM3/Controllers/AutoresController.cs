@@ -64,12 +64,16 @@ namespace MiPrimerWebApiM3.Controllers
         }
 
         [HttpPost]
-        public ActionResult Post([FromBody] Autor autor)
+        public async Task<ActionResult> Post([FromBody] AutorCreacionDTO autorCreacion)
         {
-            context.Autores.Add(autor);
-            context.SaveChanges();
+            var autor = mapper.Map<Autor>(autorCreacion);
 
-            return new CreatedAtRouteResult("ObtenerAutor", new { id = autor.Id }, autor);
+            context.Autores.Add(autor);
+            await context.SaveChangesAsync();
+
+            var autorDTO = mapper.Map<AutorDTO>(autor);
+
+            return new CreatedAtRouteResult("ObtenerAutor", new { id = autor.Id }, autorDTO);
         }
 
         [HttpPut]
