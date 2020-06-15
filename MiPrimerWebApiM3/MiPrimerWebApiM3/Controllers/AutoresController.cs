@@ -70,8 +70,8 @@ namespace MiPrimerWebApiM3.Controllers
         [HttpGet("Configuracion")]
         public ActionResult<string> Configuracion()
         {
-            //return configuration["apellido"];
-            return configuration["connectionStrings:DefaultConnection"]; //Busqueda interna
+            return configuration["apellido"];
+            //return configuration["connectionStrings:DefaultConnection"]; //Busqueda interna
         }
 
         [HttpPost]

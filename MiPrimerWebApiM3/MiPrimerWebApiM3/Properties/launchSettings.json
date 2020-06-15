@@ -14,6 +14,7 @@
       "launchBrowser": true,
       "launchUrl": "api/autores",
       "environmentVariables": {
+        "apellido": "Desde variable de ambiente",
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
     },
