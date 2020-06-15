@@ -25,6 +25,7 @@ namespace IHostedServiceDemo
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddTransient<IHostedService, WriteToFileHostedService>();
+            services.AddTransient<IHostedService, WriteToFileHostedService2>();
 
             services.AddControllersWithViews();
         }
