@@ -1,10 +1,12 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using MiPrimerWebApiM3.Context;
 using MiPrimerWebApiM3.Entities;
 using MiPrimerWebApiM3.Helpers;
+using MiPrimerWebApiM3.Models;
 using MiPrimerWebApiM3.Services;
 using System;
 using System.Collections.Generic;
@@ -20,12 +22,14 @@ namespace MiPrimerWebApiM3.Controllers
         private readonly ApplicationDbContext context;
         private readonly IClaseB claseB;
         private readonly ILogger<AutoresController> logger;
+        private readonly IMapper mapper;
 
-        public AutoresController(ApplicationDbContext context, IClaseB claseB, ILogger<AutoresController> logger)
+        public AutoresController(ApplicationDbContext context, IClaseB claseB, ILogger<AutoresController> logger, IMapper mapper)
         {
             this.context = context;
             this.claseB = claseB;
             this.logger = logger;
+            this.mapper = mapper;
         }
 
         //Multiple endpoint
@@ -45,7 +49,7 @@ namespace MiPrimerWebApiM3.Controllers
         // GET api/autores/5 o api/autores/5/david
         [HttpGet("{id}/{param2?}", Name = "ObtenerAutor")] // param2 es opcional
         //[HttpGet("{id}/{param2=David}", Name = "ObtenerAutor")] // param2 con parametro por defecto
-        public ActionResult<Autor> Get(int id, string param2)
+        public ActionResult<AutorDTO> Get(int id, string param2)
         {
             var autor = context.Autores.FirstOrDefault(x => x.Id == id);
 
@@ -53,10 +57,10 @@ namespace MiPrimerWebApiM3.Controllers
             {
                 return NotFound();
             }
-            else
-            {
-                return autor;
-            }
+
+            var autorDTO = mapper.Map<AutorDTO>(autor);
+
+            return autorDTO;
         }
 
         [HttpPost]
