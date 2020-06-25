@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using AutoMapper.Configuration;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -19,6 +20,7 @@ namespace MiPrimerWebApiM3.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [EnableCors("PermitirApiRequest")]
     public class AutoresController: ControllerBase
     {
         private readonly ApplicationDbContext context;
