@@ -33,6 +33,7 @@ namespace MiPrimerWebApiM3
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddCors();
             services.AddAutoMapper(configuration => 
             {
                 configuration.CreateMap<Autor, AutorDTO>();
@@ -76,6 +77,10 @@ namespace MiPrimerWebApiM3
             app.UseResponseCaching();
 
             app.UseAuthentication();
+
+            //* = a todo
+            //app.UseCors(builder => builder.WithOrigins("DOMINIO").WithMethods("GET", "POST").WithHeaders("*")); // O
+            app.UseCors(builder => builder.WithOrigins("DOMINIO").WithMethods("GET", "POST").AllowAnyHeader());
 
             //app.UseMvc();
 
