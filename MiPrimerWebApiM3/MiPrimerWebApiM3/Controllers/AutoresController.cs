@@ -22,6 +22,7 @@ namespace MiPrimerWebApiM3.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [EnableCors("PermitirApiRequest")]
+    [HttpHeaderIsPresent("x-version", "1")]
     public class AutoresController: ControllerBase
     {
         private readonly ApplicationDbContext context;
