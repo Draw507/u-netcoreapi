@@ -2,6 +2,7 @@
 using AutoMapper.Configuration;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -28,14 +29,17 @@ namespace MiPrimerWebApiM3.Controllers
         private readonly ILogger<AutoresController> logger;
         private readonly IMapper mapper;
         private readonly Microsoft.Extensions.Configuration.IConfiguration configuration;
+        private readonly IDataProtector _protector;
 
-        public AutoresController(ApplicationDbContext context, IClaseB claseB, ILogger<AutoresController> logger, IMapper mapper, Microsoft.Extensions.Configuration.IConfiguration configuration)
+        public AutoresController(ApplicationDbContext context, IClaseB claseB, ILogger<AutoresController> logger, IMapper mapper, 
+            Microsoft.Extensions.Configuration.IConfiguration configuration, IDataProtectionProvider protectionProvider)
         {
             this.context = context;
             this.claseB = claseB;
             this.logger = logger;
             this.mapper = mapper;
             this.configuration = configuration;
+            this._protector = protectionProvider.CreateProtector("valor_unico_y_quizas_secreto");
         }
 
         //Multiple endpoint
@@ -47,9 +51,19 @@ namespace MiPrimerWebApiM3.Controllers
         {
             //throw new NotImplementedException();
 
-            logger.LogInformation("Obteniendo los autores");
+            //logger.LogInformation("Obteniendo los autores");
 
-            return context.Autores.ToList();
+            //return context.Autores.ToList();
+
+            var protectorLimitadoTiempo = _protector.ToTimeLimitedDataProtector();
+
+            string textoPlano = "David";
+            //string textoCifrado = _protector.Protect(textoPlano);
+            //string textoDesencriptado = _protector.Unprotect(textoCifrado);
+            string textoCifrado = protectorLimitadoTiempo.Protect(textoPlano, TimeSpan.FromSeconds(5));
+            string textoDesencriptado = protectorLimitadoTiempo.Unprotect(textoCifrado);            
+
+            return Ok(new { textoPlano, textoCifrado, textoDesencriptado });
         }
 
         // GET api/autores/5 o api/autores/5/david

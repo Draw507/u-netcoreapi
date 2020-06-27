@@ -33,6 +33,8 @@ namespace MiPrimerWebApiM3
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddDataProtection();
+
             services.AddCors(options => 
             {
                 options.AddPolicy("PermitirApiRequest", builder => builder.WithOrigins("DOMINIO").WithMethods("GET", "POST").AllowAnyHeader());
