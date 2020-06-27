@@ -33,7 +33,7 @@ namespace MiPrimerWebApiM3.Controllers
         private readonly HashServices hashServices;
         private readonly IDataProtector _protector;
 
-        public AutoresController(ApplicationDbContext context, IClaseB claseB, ILogger<AutoresController> logger, IMapper mapper, 
+        public AutoresController(ApplicationDbContext context, IClaseB claseB, ILogger<AutoresController> logger, IMapper mapper,
             Microsoft.Extensions.Configuration.IConfiguration configuration, IDataProtectionProvider protectionProvider, HashServices hashServices)
         {
             this.context = context;
@@ -46,9 +46,9 @@ namespace MiPrimerWebApiM3.Controllers
         }
 
         //Multiple endpoint
-        [HttpGet("/listado")] // ignora [Route("api/[controller]")]
+        //[HttpGet("/listado")] // ignora [Route("api/[controller]")]
         [HttpGet("listado")]
-        [HttpGet]
+        //[HttpGet]
         [ServiceFilter(typeof(MiFiltroDeAccion))] // Esto es por la inyeccion de dependencias en el filtro de accion
         public ActionResult<IEnumerable<Autor>> Get()
         {
@@ -64,12 +64,12 @@ namespace MiPrimerWebApiM3.Controllers
             //string textoCifrado = _protector.Protect(textoPlano);
             //string textoDesencriptado = _protector.Unprotect(textoCifrado);
             string textoCifrado = protectorLimitadoTiempo.Protect(textoPlano, TimeSpan.FromSeconds(5));
-            string textoDesencriptado = protectorLimitadoTiempo.Unprotect(textoCifrado);            
+            string textoDesencriptado = protectorLimitadoTiempo.Unprotect(textoCifrado);
 
             return Ok(new { textoPlano, textoCifrado, textoDesencriptado });
         }
 
-        [HttpGet(Name = "hash")]
+        [HttpGet("GenerarHash")]
         public ActionResult<string> GetHash()
         {
             string textoPlano = "David";
@@ -86,7 +86,7 @@ namespace MiPrimerWebApiM3.Controllers
         {
             var autor = context.Autores.FirstOrDefault(x => x.Id == id);
 
-            if(autor == null)
+            if (autor == null)
             {
                 return NotFound();
             }
@@ -106,7 +106,7 @@ namespace MiPrimerWebApiM3.Controllers
             autor.Enlaces.Add(new Enlace(href: Url.Link("BorrarAutor", new { id = autor.Id }), rel: "self", metodo: "DELETE"));
         }
 
-        [HttpGet("Configuracion")]
+        [HttpGet("LeerConfiguracion")]
         public ActionResult<string> Configuracion()
         {
             return configuration["apellido"];
@@ -126,7 +126,7 @@ namespace MiPrimerWebApiM3.Controllers
             return new CreatedAtRouteResult("ObtenerAutor", new { id = autor.Id }, autorDTO);
         }
 
-        [HttpPut("{id}")]
+        [HttpPut("{id}", Name = "ActualizarAutor")]
         public async Task<ActionResult> Put(int id, [FromBody] AutorCreacionDTO autorActualizacion)
         {
             var autor = mapper.Map<Autor>(autorActualizacion);
@@ -139,17 +139,17 @@ namespace MiPrimerWebApiM3.Controllers
         }
 
         //JSON Patch RFC 6902
-        [HttpPatch("{id}")]
+        [HttpPatch("{id}", Name = "ActualizarParcialAutor")]
         public async Task<ActionResult> Patch(int id, [FromBody] JsonPatchDocument<AutorCreacionDTO> patchDocument)
         {
-            if(patchDocument == null)
+            if (patchDocument == null)
             {
                 return BadRequest();
             }
 
             var autorDeLaDB = await context.Autores.FirstOrDefaultAsync(x => x.Id == id);
 
-            if(autorDeLaDB == null)
+            if (autorDeLaDB == null)
             {
                 return NotFound();
             }
@@ -172,12 +172,12 @@ namespace MiPrimerWebApiM3.Controllers
             return NoContent();
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete("{id}", Name = "BorrarAutor")]
         public async Task<ActionResult<Autor>> Delete(int id)
         {
             var autorId = await context.Autores.Select(x => x.Id).FirstOrDefaultAsync(x => x == id);
 
-            if(autorId == default(int))
+            if (autorId == default(int))
             {
                 return NotFound();
             }

@@ -20,7 +20,7 @@ namespace MiPrimerWebApiM3.Controllers
             this.context = context;
         }
 
-        [HttpGet]
+        [HttpGet(Name = "GetLibros")]
         public ActionResult<IEnumerable<Libro>> Get()
         {
             return context.Libros.Include(x => x.Autor).ToList();
@@ -39,7 +39,7 @@ namespace MiPrimerWebApiM3.Controllers
             return libro;
         }
 
-        [HttpPost]
+        [HttpPost(Name = "CrearLibro")]
         public ActionResult Post([FromBody] Libro libro)
         {
             context.Libros.Add(libro);
@@ -47,7 +47,7 @@ namespace MiPrimerWebApiM3.Controllers
             return new CreatedAtRouteResult("ObtenerLibro", new { id = libro.Id }, libro);
         }
 
-        [HttpPut("{id}")]
+        [HttpPut("{id}", Name = "ActualizarLibro")]
         public ActionResult Put(int id, [FromBody] Libro libro)
         {
             if (id != libro.Id)
@@ -60,7 +60,7 @@ namespace MiPrimerWebApiM3.Controllers
             return Ok();
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete("{id}", Name = "BorrarLibro")]
         public ActionResult<Libro> Delete(int id)
         {
             var libro = context.Libros.FirstOrDefault(x => x.Id == id);
