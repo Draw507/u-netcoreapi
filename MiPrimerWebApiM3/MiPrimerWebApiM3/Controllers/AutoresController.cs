@@ -68,7 +68,7 @@ namespace MiPrimerWebApiM3.Controllers
             return Ok(new { textoPlano, textoCifrado, textoDesencriptado });
         }
 
-        [HttpGet("hash")]
+        [HttpGet(Name = "hash")]
         public ActionResult<string> GetHash()
         {
             string textoPlano = "David";
@@ -92,7 +92,17 @@ namespace MiPrimerWebApiM3.Controllers
 
             var autorDTO = mapper.Map<AutorDTO>(autor);
 
+            GenerarEnlaces(autorDTO);
+
             return autorDTO;
+        }
+
+        private void GenerarEnlaces(AutorDTO autor)
+        {
+
+            autor.Enlaces.Add(new Enlace(href: Url.Link("ActualizarAutor", new { id = autor.Id }), rel: "self", metodo: "PUT"));
+            autor.Enlaces.Add(new Enlace(href: Url.Link("ObtenerAutor", new { id = autor.Id }), rel: "self", metodo: "GET"));
+            autor.Enlaces.Add(new Enlace(href: Url.Link("BorrarAutor", new { id = autor.Id }), rel: "self", metodo: "DELETE"));
         }
 
         [HttpGet("Configuracion")]
@@ -102,7 +112,7 @@ namespace MiPrimerWebApiM3.Controllers
             //return configuration["connectionStrings:DefaultConnection"]; //Busqueda interna
         }
 
-        [HttpPost]
+        [HttpPost(Name = "CrearAutor")]
         public async Task<ActionResult> Post([FromBody] AutorCreacionDTO autorCreacion)
         {
             var autor = mapper.Map<Autor>(autorCreacion);
