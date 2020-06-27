@@ -29,16 +29,18 @@ namespace MiPrimerWebApiM3.Controllers
         private readonly ILogger<AutoresController> logger;
         private readonly IMapper mapper;
         private readonly Microsoft.Extensions.Configuration.IConfiguration configuration;
+        private readonly HashServices hashServices;
         private readonly IDataProtector _protector;
 
         public AutoresController(ApplicationDbContext context, IClaseB claseB, ILogger<AutoresController> logger, IMapper mapper, 
-            Microsoft.Extensions.Configuration.IConfiguration configuration, IDataProtectionProvider protectionProvider)
+            Microsoft.Extensions.Configuration.IConfiguration configuration, IDataProtectionProvider protectionProvider, HashServices hashServices)
         {
             this.context = context;
             this.claseB = claseB;
             this.logger = logger;
             this.mapper = mapper;
             this.configuration = configuration;
+            this.hashServices = hashServices;
             this._protector = protectionProvider.CreateProtector("valor_unico_y_quizas_secreto");
         }
 
@@ -64,6 +66,16 @@ namespace MiPrimerWebApiM3.Controllers
             string textoDesencriptado = protectorLimitadoTiempo.Unprotect(textoCifrado);            
 
             return Ok(new { textoPlano, textoCifrado, textoDesencriptado });
+        }
+
+        [HttpGet("hash")]
+        public ActionResult<string> GetHash()
+        {
+            string textoPlano = "David";
+            var hashResult1 = hashServices.Hash(textoPlano).Hash;
+            var hashResult2 = hashServices.Hash(textoPlano).Hash;
+
+            return Ok(new { textoPlano, hashResult1, hashResult2 });
         }
 
         // GET api/autores/5 o api/autores/5/david
