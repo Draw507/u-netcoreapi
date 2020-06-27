@@ -79,9 +79,17 @@ namespace MiPrimerWebApiM3.Controllers
             return Ok(new { textoPlano, hashResult1, hashResult2 });
         }
 
+        /// <summary>
+        /// Obtiene un autor
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="param2"></param>
+        /// <returns></returns>
         // GET api/autores/5 o api/autores/5/david
         [HttpGet("{id}/{param2?}", Name = "ObtenerAutor")] // param2 es opcional
         //[HttpGet("{id}/{param2=David}", Name = "ObtenerAutor")] // param2 con parametro por defecto
+        //[ProducesResponseType(404)]
+        //[ProducesResponseType(typeof(AutorDTO), 200)]
         public ActionResult<AutorDTO> Get(int id, string param2)
         {
             var autor = context.Autores.FirstOrDefault(x => x.Id == id);
@@ -106,6 +114,10 @@ namespace MiPrimerWebApiM3.Controllers
             autor.Enlaces.Add(new Enlace(href: Url.Link("BorrarAutor", new { id = autor.Id }), rel: "self", metodo: "DELETE"));
         }
 
+        /// <summary>
+        /// Lee la configuracion de appsettings
+        /// </summary>
+        /// <returns></returns>
         [HttpGet("LeerConfiguracion")]
         public ActionResult<string> Configuracion()
         {

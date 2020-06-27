@@ -22,6 +22,8 @@ using MiPrimerWebApiM3.Helpers;
 using MiPrimerWebApiM3.Models;
 using MiPrimerWebApiM3.Services;
 
+[assembly: ApiConventionType(typeof(DefaultApiConventions))]
+
 namespace MiPrimerWebApiM3
 {
     public class Startup
@@ -90,9 +92,9 @@ namespace MiPrimerWebApiM3
 
                 //config.SwaggerDoc("v2", new OpenApiInfo { Title = "Mi Web API", Version = "v2" });
 
-                //var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
-                //var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
-                //config.IncludeXmlComments(xmlPath);
+                var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+                config.IncludeXmlComments(xmlPath);
 
             });
         }
